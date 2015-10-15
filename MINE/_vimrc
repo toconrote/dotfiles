@@ -77,7 +77,7 @@ nnoremap <C-l> 5l
 "Ctrl+WをSpace,Wに
 nnoremap <Space>w <C-w>
 
-"Ctrl+Oで半角全角"
+"Ctrl+iで半角全角"
 inoremap <C-i> nop
 inoremap <C-i> <C-^>
 
@@ -107,6 +107,7 @@ NeoBundle 'vim-scripts/taglist.vim'
 NeoBundle 'vim-scripts/TagHighlight'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'Lokaltog/vim-easymotion'
 
 call neobundle#end()
 
@@ -118,15 +119,15 @@ filetype plugin indent on
 call unite#custom#default_action('file' , 'tabopen')
 
 """""""""""""""""""""""""プラグインのキーマップ"""""""""""""""""""""""""
-"nerdtree
+""""""nerdtree
 nnoremap <silent><C-e> :NERDTreeToggle<CR>
 
-" The prefix key.
+"""""" The prefix key.
 nnoremap    [unite]   <Nop>
 nmap    <Space>u [unite]
 
-" unite.vim keymap
-let g:unite_source_history_yank_enable =1
+"""""" unite.vim keymap
+""let g:unite_source_history_yank_enable =1
 nnoremap <silent> [unite]u :<C-u>Unite<Space>file<CR>
 nnoremap <silent> [unite]g :<C-u>Unite<Space>grep<CR>
 nnoremap <silent> [unite]f :<C-u>Unite<Space>buffer<CR>
@@ -137,9 +138,9 @@ nnoremap <silent> [unite]h :<C-u>Unite<Space>history/yank<CR>
 nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
 nnoremap <silent> [unite]c :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 nnoremap <silent> ,vr :UniteResume<CR>
-" vinarise
+"""""" vinarise
 let g:vinarise_enable_auto_detect = 1 
-" unite-build map
+"""""" unite-build map
 nnoremap <silent> ,vb :Unite build<CR>
 nnoremap <silent> ,vcb :Unite build:!<CR>
 nnoremap <silent> ,vch :UniteBuildClearHighlight<CR>
@@ -148,5 +149,17 @@ let g:unite_source_grep_command = 'ag'
 let g:unite_source_grep_default_opts = '--nocolor --nogroup'
 let g:unite_source_grep_max_candidates = 200
 let g:unite_source_grep_recursive_opt = ''
-" unite-grepの便利キーマップ
+"""""" unite-grepの便利キーマップ
 vnoremap /g y:Unite grep::-iRn:<C-R>=escape(@", '\\.*$^[]')<CR><CR>
+
+"""""" easy-motion
+""基本のft置き換え
+map f <Plug>(easymotion-fl)
+map t <Plug>(easymotion-tl)
+map F <Plug>(easymotion-Fl)
+map T <Plug>(easymotion-Tl)
+
+""２文字find
+nmap s <Plug>(easymotion-s2)
+xmap s <Plug>(easymotion-s2)
+omap s <Plug>(easymotion-s2)
