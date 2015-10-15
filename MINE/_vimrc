@@ -50,17 +50,19 @@ set cursorline
 set mouse=a
 
 """""""""""""""""""""""""""""キーマッピング"""""""""""""""""""""""""""""
-"●インサートモード"
+""""""●インサートモード"
 "■カーソル移動"
-inoremap <C-l> nop
-inoremap <C-j> <Down>
-inoremap <C-k> <Up>
-inoremap <C-h> <Left>
-inoremap <C-l> <Right>
+noremap! <C-l> nop
+noremap! <C-j> <Down>
+noremap! <C-k> <Up>
+noremap! <C-h> <Left>
+noremap! <C-l> <Right>
 
 "■BS
 inoremap <C-p> nop
 inoremap <C-p> <BS>
+inoremap <S-BS> <Home>
+inoremap <S-DEL> <END>
 
 "■jjでEsc"
 inoremap <silent> jj <Esc>:set iminsert=0<CR>
@@ -68,6 +70,11 @@ inoremap <silent> jj <Esc>:set iminsert=0<CR>
 "■Esc時imeオフ"
 inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
 
+"Ctrl+iで半角全角"
+inoremap <C-i> nop
+
+""""""●ノーマルモード
+inoremap <C-i> <C-^>
 "■Ctrl+移動で５ずつ移動"
 nnoremap <C-h> 5h
 nnoremap <C-j> 5j
@@ -76,10 +83,6 @@ nnoremap <C-l> 5l
 
 "Ctrl+WをSpace,Wに
 nnoremap <Space>w <C-w>
-
-"Ctrl+iで半角全角"
-inoremap <C-i> nop
-inoremap <C-i> <C-^>
 
 """""""""""""""""""""""""""""php"""""""""""""""""""""""""""""""""""""""
 let php_sql_query = 1
