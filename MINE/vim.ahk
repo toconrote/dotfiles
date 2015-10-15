@@ -13,4 +13,8 @@ sc070::Delete
 ^k::Send, {Up}
 ^l::Send, {Right}
 
+;; Ctrl+i -> IME ON/OFF
+^i::Send, {vkF3sc029}
+
 #HotkeyInterval 200
+#InstallKeybdHook
