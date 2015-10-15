@@ -1,3 +1,4 @@
+" 個人用：まだまだ洗練されていないので参考にはしないでね
 source $VIMRUNTIME/vimrc_example.vim
 ""source $VIMRUNTIME/mswin.vim
 ""behave mswin
