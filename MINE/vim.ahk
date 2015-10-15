@@ -4,6 +4,9 @@ sc07B::Escape
 ;; Henkan -> BS
 vk1Csc079::Backspace
 
+;; Ctrl+Space -> Enter
+^Space::Send, {Enter}
+
 ;; Katakana/Hiragana -> Backspace
 sc070::Delete
 
