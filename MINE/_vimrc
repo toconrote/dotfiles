@@ -70,16 +70,16 @@ inoremap <silent> jj <Esc>:set iminsert=0<CR>
 "■Esc時imeオフ"
 inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
 
-"Ctrl+iで半角全角"
+"Ctrl+iで半角全角(AHKでCtrl+iを半角全角に割り当ててある)"
 inoremap <C-i> nop
 
 """"""●ノーマルモード
 inoremap <C-i> <C-^>
-"■Ctrl+移動で５ずつ移動"
-nnoremap <C-h> 5h
-nnoremap <C-j> 5j
-nnoremap <C-k> 5k
-nnoremap <C-l> 5l
+"■Ctrl+移動で５ずつ移動(AHKでCtrl+hjklをカーソルに割り当ててある)"
+nnoremap <Left> 5h
+nnoremap <Down> 5j
+nnoremap <Up> 5k
+nnoremap <Right> 5l
 
 "Ctrl+WをSpace,Wに
 nnoremap <Space>w <C-w>
