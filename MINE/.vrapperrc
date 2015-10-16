@@ -58,10 +58,7 @@ inoremap <S-BS> <Home>
 inoremap <S-DEL> <END>
 
 "■jjでEsc"
-inoremap <silent> jj <Esc>:set iminsert=0<CR>
-
-"■Esc時imeオフ"
-inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
+inoremap <silent> jj <Esc>
 
 "Ctrl+iで半角全角(AHKでCtrl+iを半角全角に割り当ててある)"
 inoremap <C-i> nop
