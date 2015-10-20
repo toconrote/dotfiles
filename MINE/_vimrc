@@ -84,6 +84,9 @@ nnoremap <Right> 5l
 "Ctrl+WをSpace,Wに
 nnoremap <Space>w <C-w>
 
+"UTF8で開きなおす"
+nnoremap <silent> <F8> :set encoding=UTF-8<CR>
+
 """""""""""""""""""""""""""""php"""""""""""""""""""""""""""""""""""""""
 let php_sql_query = 1
 let php_baselib = 1
