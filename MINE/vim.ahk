@@ -1,4 +1,9 @@
-﻿;; Muhenkan -> Esc
+﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+#InstallKeybdHook
+#HotkeyInterval 200
+
+;; Muhenkan -> Esc
 sc07B::Escape
 
 ;; Henkan -> BS
@@ -38,6 +43,3 @@ sc070::Delete
 8::Numpad8
 9::Numpad9
 0::Numpad0
-
-#HotkeyInterval 200
-#InstallKeybdHook
