@@ -122,7 +122,7 @@ filetype plugin indent on
 
 ""unite""
 " ファイルは tabdrop で開く
-call unite#custom#default_action('file' , 'tabopen')
+call unite#custom#default_action('file' , 'vsplitswitch')
 
 """""""""""""""""""""""""プラグインのキーマップ"""""""""""""""""""""""""
 """"""nerdtree
