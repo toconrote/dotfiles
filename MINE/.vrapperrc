@@ -1,4 +1,4 @@
-set imd
+set imdisable=true
 behave mswin
 
 ""colorscheme candystripe
