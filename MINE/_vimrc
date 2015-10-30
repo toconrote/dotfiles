@@ -88,6 +88,10 @@ nnoremap <Space>w <C-w>
 "UTF8で開きなおす"
 nnoremap <silent> <F8> :set encoding=UTF-8<CR>
 
+"Space+p,Pでクリップボードペースト"
+nnoremap <Space>p "*p
+nnoremap <Space>P "*P
+
 """""""""""""""""""""""""""""php"""""""""""""""""""""""""""""""""""""""
 let php_sql_query = 1
 let php_baselib = 1
