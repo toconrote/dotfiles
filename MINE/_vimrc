@@ -9,7 +9,8 @@ command! Rgvimrc source C:/Program Files/Vim/_gvimrc
 runtime! userautoload/*.vim
 
 ""colorscheme candystripe
-colorscheme jellybeans
+""colorscheme jellybeans
+colorscheme hybrid
 
 set fileencoding=utf-8
 set fileencodings=utf-8,shift-JIS
