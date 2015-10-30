@@ -115,6 +115,7 @@ NeoBundle 'vim-scripts/TagHighlight'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 'kana/vim-submode'
 
 call neobundle#end()
 
@@ -170,3 +171,11 @@ map T <Plug>(easymotion-Tl)
 nmap s <Plug>(easymotion-s2)
 xmap s <Plug>(easymotion-s2)
 omap s <Plug>(easymotion-s2)
+
+"""""" submode
+""ウィンドウサイズ変更
+call submode#enter_with('renmove', 'n', '', '<Space>w>', '<C-w>>')
+call submode#enter_with('renmove', 'n', '', '<Space>w<', '<C-w><')
+call submode#map('renmove', 'n', '', '>', '<C-w>>')
+call submode#map('renmove', 'n', '', '<', '<C-w><')
+
