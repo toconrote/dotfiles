@@ -2,11 +2,11 @@
 ""NeoBundle""
 if has('vim_starting')
    " 初回起動時のみruntimepathにneobundleのパスを指定する"
-   set runtimepath+=C:/Users/mk0260/Documents/.vim/bundle/neobundle.vim/
+   set runtimepath+=$home/vimfiles/bundle/neobundle.vim/
 endif
 
 " NeoBundleを初期化"
-call neobundle#begin(expand('C:/Users/mk0260/Documents/.vim/bundle/'))
+call neobundle#begin(expand('$home/vimfiles/bundle/'))
 
 " インストールするプラグインをここに記述"
 NeoBundle 'Shougo/unite.vim'
@@ -19,25 +19,26 @@ NeoBundle 'kana/vim-submode'
 NeoBundle 'kana/vim-smartinput'
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'tpope/vim-surround'
 
 call neobundle#end()
 
 " ファイルタイプ別のプラグイン/インデントを有効にする"
 filetype plugin indent on
 
-""unite""
-" ファイルは tabdrop で開く
-"call unite#custom#default_action('file' , 'vsplitswitch')
 
 """""""""""""""""""""""""プラグインのキーマップ"""""""""""""""""""""""""
 """"""nerdtree
 nnoremap <silent><C-e> :NERDTreeToggle<CR>
 
+""""""unite
+" ファイルは tabdrop で開く
+"call unite#custom#default_action('file' , 'vsplitswitch')
+"
 """""" The prefix key.
 nnoremap    [unite]   <Nop>
 nmap    <Space>u [unite]
 
-"""""" unite.vim keymap
 ""let g:unite_source_history_yank_enable =1
 nnoremap <silent> [unite]u :<C-u>Unite<Space>file<CR>
 nnoremap <silent> [unite]g :<C-u>Unite<Space>grep<CR>

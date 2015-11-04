@@ -1,12 +1,13 @@
 " 個人用：まだまだ洗練されていないので参考にはしないでね
 source $VIMRUNTIME/vimrc_example.vim
+source $VIMRUNTIME/macros/matchit.vim
 
 "userautoload以下に移動
 " set directory=C:/Temp/vim_swap
 " set backupdir=C:/Temp/vim_backup
 runtime! userautoload/*.vim
-command! Euser e $vim/vimfiles/userautoload/usersetting.vim
-command! Eplug e $vim/vimfiles/userautoload/plugins.vim
+command! Euser e $home/vimfiles/userautoload/usersetting.vim
+command! Eplug e $home/vimfiles/userautoload/plugins.vim
 
 colorscheme hybrid
 

@@ -39,6 +39,9 @@ sc070::Delete
 ;; Ctrl+2 -> F2
 ^2::Send, {F2}
 
+;; Ctrl+p -> %
+^p::Send, `%
+
 ;; LCtrl+<> -> Alt+(Shift)Tab
 LCtrl & <::ShiftAltTab
 LCtrl & >::AltTab
