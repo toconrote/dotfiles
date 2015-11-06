@@ -20,6 +20,7 @@ NeoBundle 'kana/vim-smartinput'
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'tpope/vim-surround'
+NeoBundle 'Shougo/neocomplcache'
 
 call neobundle#end()
 
@@ -95,3 +96,6 @@ let g:indent_guides_enable_on_vim_startup = 1
 let g:restart_sessionoptions
   \ = 'blank,buffers,curdir,folds,help,localoptions,tabpages'
 
+""""""" neocomplecache
+" プラグイン有効化
+let g:neocomplcache_enable_at_startup = 1
