@@ -11,6 +11,7 @@ sc070::!Right
 #IfWinActive
 ;; Muhenkan -> Esc
 sc07B::Escape
+^sc07B::Send, {Escape}
 
 ;; Henkan -> BS
 vk1Csc079::Backspace
