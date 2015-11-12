@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>タイトル</title>
+<style>
+h1 {
+  font-size: 14pt;
+  padding: 1px 10px;
+  border-style: solid;
+  border-width: 0px 0px 2px 7px;
+  border-color: green;
+}
+
+body {
+  background: #EEFFEE;
+}
+
+article {
+  background: white;
+  margin: 10px 0px;
+  padding: 10px;
+}
+</style>
+<script src="/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+  var EventSource = window.EventSource || window.MozEventSource;
+  function initial() {
+    if (!EventSource) {
+      alert("EventSourceが利用できません。");
+      return;
+    }
+    var source = new EventSource('ss.php');
+    source.onmessage = function(event) {
+      var ul = document.getElementById('msgs');
+      nonulldata = event.data.replace(/\0/g,'');
+      msgstr = JSON.parse(nonulldata);
+      var datahtml = '';
+      for (key in msgstr) {
+        datahtml += '<li>' + msgstr[key] + '</li>';
+      }
+      ul.innerHTML = datahtml;
+    };
+  }
+</script>
+</head>
+<body onload="initial();">
+	<header>
+		<h1>Sample</h1>
+	</header>
+	<input type="text" id="msg">
+	<input type="button" value="送信" onclick="sendMsg()">
+	<article>
+		<ul id="msgs"></ul>
+	</article>
+	<script>
+    function sendMsg() {
+      msg = document.getElementById("msg").value;
+      if (!msg)
+        return;
+      $.post("sendmsg.php", {
+        "msg" : msg
+      }, function(data, status) {
+        if (status != "success") {
+          alert("なんか失敗した");
+        }
+      });
+      document.getElementById("msg").value = '';
+    }
+  </script>
+</body>
+</html>
