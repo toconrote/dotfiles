@@ -16,7 +16,7 @@ sc07B::Escape
 ;; Henkan -> BS
 vk1Csc079::Backspace
 
-;; Katakana/Hiragana -> Backspace
+;; Katakana/Hiragana -> Delete
 sc070::Delete
 
 ;; Ctrl+Space -> Enter

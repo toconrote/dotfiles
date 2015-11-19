@@ -28,16 +28,19 @@ endif
 
 " Visual選択で選択されたテキストが、自動的にクリップボードレジスタ "*" にコピーされる。
 ":set guioptions+=a
-let g:save_window_file = expand('~/vimfiles/.vimwinpos')
-
 " 前回終了時のウィンドウ状態を保存して復元
+
+
+let g:save_window_file = expand('~/vimfiles/.vimwinpos')
+let g:save_window_file2 = expand('~/vimfiles/.vimwinfull')
+
 augroup SaveWindow
   autocmd!
   autocmd VimLeavePre * call s:save_window()
   function! s:save_window()
     let x = getwinposx()
     let y = getwinposy()
-    let g:full = 0
+    let full = 0
     if x < 0 && y < 0
       let x = 0
       let y = 0
@@ -48,13 +51,20 @@ augroup SaveWindow
           \ 'set lines=' . &lines,
           \ 'winpos ' . x . ' ' . y,
           \ ]
+    let option_f = ['']
     if full == 1
-      call insert(options, 'au GUIEnter * simalt ~x', 3)
+      let option_f = ['au GUIEnter * simalt ~x']
     endif
-    call writefile(options, g:save_window_file)
+    if full != 1
+      call writefile(options, g:save_window_file)
+    endif
+    call writefile(option_f, g:save_window_file2)
   endfunction
 augroup END
 
 if filereadable(g:save_window_file)
   execute 'source' g:save_window_file
+endif
+if filereadable(g:save_window_file2)
+  execute 'source' g:save_window_file2
 endif
