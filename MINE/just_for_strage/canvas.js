@@ -4,6 +4,7 @@ $(function(){
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   buffers = [];
+  MAXHIST = -1;
   ind = 0;
   mx = 0;
   my = 0;
@@ -12,7 +13,7 @@ $(function(){
   $("body").mouseup(function(){
     if(choverflg){
       ind++;
-      saveCtx(ind);
+      saveCtx();
       choverflg = false;
     }
   })
@@ -26,6 +27,8 @@ $(function(){
   $("#next").click(nextHist);
   $("#hist").click(clearHist);
   clear();
+
+  makePalletes();
 });
 
 function drawStart(){
@@ -38,7 +41,7 @@ function draw() {
 function mousepos(x, y, mb) {
   mx = x - canvas.offsetLeft;
   my = y - canvas.offsetTop;
-  $("#debug").html("mx:"+mx+" my:"+my);
+//  $("#debug").html("mx:"+mx+" my:"+my);
   if(mb == "1"){
     line(mx, my);
     if(mx>=0 && mx<=640 && my>=0 && my<=480)choverflg=true;
@@ -63,8 +66,9 @@ function whiteRect(){
 }
 function clearHist(){
   ind=0;
+  buffers = null; //メモリ開放
   buffers = [];
-  saveCtx(0);
+  saveCtx();
 }
 
 function prevHist(){
@@ -78,7 +82,11 @@ function nextHist(){
   loadCtx(ind);
 }
 
-function saveCtx(ind){
+function saveCtx(){
+  if(ind==MAXHIST){
+    buffers.shift();
+    ind = MAXHIST-1;
+  }
   buffers[ind] = ctx.getImageData(0, 0, 640, 480);
   if(buffers.length > ind+1){
     buffers.splice(ind+1, buffers.length-ind-1);
@@ -100,5 +108,22 @@ function buttonReload(){
     $("#next").attr("disabled", "disabled");
   } else {
     $("#next").removeAttr("disabled");
+  }
+}
+
+function makePalletes(){
+  tar = $("#palletes");
+  for(i=0;i<24;i++){
+    r = ("00"+Math.floor(Math.random()*256).toString(16)).slice(-2);
+    g = ("00"+Math.floor(Math.random()*256).toString(16)).slice(-2);
+    b = ("00"+Math.floor(Math.random()*256).toString(16)).slice(-2);
+    tar.append('<div class="pallete" style="background-color:#'+r+g+b+';"></div>').children(":last").click(function(){
+      ctx.fillStyle = $(this).css("background-color");
+      ctx.strokeStyle = $(this).css("background-color");
+      $("#palletes").children().each(function(){
+        $(this).children(":first").removeClass("selected");
+      })
+      $(this).children(":first").addClass("selected");
+    }).append('<div></div>');
   }
 }

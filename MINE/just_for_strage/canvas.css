@@ -17,5 +17,20 @@ div.content_center{
   text-align:center;
   width:100%;
 }
+div.pallete {
+  float:left;
+  width:60px;
+  height:30px;
+  margin:2px;
+}
+div.pallete>div{
+  display:none;
+}
+div.pallete>div.selected {
+  display:block;
+  height:10px;
+  margin-top:10px;
+  background-color:white;
+}
 @media only screen and (max-width:600px){
 }
