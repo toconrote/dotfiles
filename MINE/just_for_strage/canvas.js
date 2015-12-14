@@ -1,6 +1,10 @@
 $(function(){
+  //ブラウザ判定(ffflg:ファイアフォックスかどうか)
+  ffflg = getBrowser();
+
   canvas = document.getElementById('c');
   ctx = canvas.getContext('2d');
+  if(!ctx) return;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   buffers = [];
@@ -9,6 +13,8 @@ $(function(){
   mx = 0;
   my = 0;
   choverflg = false;
+
+  //イベント関連
   $("body").mousedown(function(eo){if(eo.which=="1")drawStart()});
   $("body").mouseup(function(){
     if(choverflg){
@@ -18,7 +24,15 @@ $(function(){
     }
   })
   $("body").mousemove(function(eo){
-    mousepos(eo.pageX, eo.pageY, eo.which)
+    var mb = 0;
+    if(ffflg){
+      if(eo.buttons == 1){
+        mb = "1";
+      }
+    } else {
+      mb = eo.which;
+    }
+    mousepos(eo.pageX, eo.pageY, mb)
   });
   $("#clear").click(function(){
     if(window.confirm("クリアしてよろしいですか？"))clear();
@@ -28,6 +42,7 @@ $(function(){
   $("#hist").click(clearHist);
   clear();
 
+  //カラーパレット生成
   makePalletes();
 });
 
@@ -35,15 +50,12 @@ function drawStart(){
   ctx.beginPath();
   ctx.moveTo(mx, my);
 }
-function draw() {
-  line(mx, my);
-}
 function mousepos(x, y, mb) {
   mx = x - canvas.offsetLeft;
   my = y - canvas.offsetTop;
-//  $("#debug").html("mx:"+mx+" my:"+my);
+  //  $("#debug").html("mx:"+mx+" my:"+my);
   if(mb == "1"){
-    line(mx, my);
+    line(mx+0.5, my+0.5);
     if(mx>=0 && mx<=640 && my>=0 && my<=480)choverflg=true;
   }
 }
@@ -112,11 +124,32 @@ function buttonReload(){
 }
 
 function makePalletes(){
-  tar = $("#palletes");
-  for(i=0;i<24;i++){
-    r = ("00"+Math.floor(Math.random()*256).toString(16)).slice(-2);
-    g = ("00"+Math.floor(Math.random()*256).toString(16)).slice(-2);
-    b = ("00"+Math.floor(Math.random()*256).toString(16)).slice(-2);
+  var tar = $("#palletes");
+  var palletNo = 26;
+  var r,g,b,rn,gn,bn;
+  var color;
+  for(i=0;i<palletNo;i++){
+    switch(i){
+      case palletNo-1:
+        r = "00";
+        b = "00";
+        g = "00";
+        break;
+      case palletNo-2:
+        r = "FF";
+        b = "FF";
+        g = "FF";
+        break;
+      default:
+        rn = Math.floor(Math.random()*256);
+        gn = Math.floor(Math.random()*256);
+        bn = Math.floor(Math.random()*256);
+        r = ("00"+rn.toString(16)).slice(-2);
+        g = ("00"+gn.toString(16)).slice(-2);
+        b = ("00"+bn.toString(16)).slice(-2);
+        break;
+    }
+    color = 'black';
     tar.append('<div class="pallete" style="background-color:#'+r+g+b+';"></div>').children(":last").click(function(){
       ctx.fillStyle = $(this).css("background-color");
       ctx.strokeStyle = $(this).css("background-color");
@@ -124,6 +157,22 @@ function makePalletes(){
         $(this).children(":first").removeClass("selected");
       })
       $(this).children(":first").addClass("selected");
-    }).append('<div></div>');
+    }).append('<div style="border:2px solid '+color+'"></div>');
   }
+}
+
+function getBrowser(){
+  var ua = window.navigator.userAgent.toLowerCase();
+  if(ua.indexOf('msie')!=-1){
+    alert('IEは非対応です');
+    return false;
+  }
+  if(ua.indexOf('chrome')!=-1){
+    return false;
+  }
+  if(ua.indexOf('firefox')!=-1){
+    return true;
+  }
+  alert('推奨環境はGoogle ChromeとFirefoxの最新verです。\nあと、IEだと絶対に動きません。');
+  return false;
 }
