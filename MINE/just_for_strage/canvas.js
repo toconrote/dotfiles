@@ -7,6 +7,8 @@ $(function(){
   if(!ctx) return;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
+  ctx.lineWidth = 3;
+  alpha = 1.0;
   buffers = [];
   MAXHIST = -1;
   ind = 0;
@@ -16,34 +18,35 @@ $(function(){
 
   //イベント関連
   $("body").mousedown(function(eo){if(eo.which=="1")drawStart()});
-  $("body").mouseup(function(){
-    if(choverflg){
-      ind++;
-      saveCtx();
-      choverflg = false;
-    }
-  })
-  $("body").mousemove(function(eo){
-    var mb = 0;
-    if(ffflg){
-      if(eo.buttons == 1){
-        mb = "1";
+  $("body").mouseup(function(){drawEnd();})
+    $("body").mousemove(function(eo){
+      var mb = 0;
+      if(ffflg){
+        if(eo.buttons == 1){
+          mb = "1";
+        }
+      } else {
+        mb = eo.which;
       }
-    } else {
-      mb = eo.which;
-    }
-    mousepos(eo.pageX, eo.pageY, mb)
-  });
-  $("#clear").click(function(){
-    if(window.confirm("クリアしてよろしいですか？"))clear();
-  });
-  $("#prev").click(prevHist);
-  $("#next").click(nextHist);
-  $("#hist").click(clearHist);
-  clear();
+      mousepos(eo.pageX, eo.pageY, mb)
+    });
+$("#linewidth").change(function(){
+  ctx.lineWidth = this.value;
+})
+$("#alpha").change(function(){
+  alpha = (this.value / 0.1)*0.1;
+  ctx.fillStyle = ctx.strokeStyle = changeAlpha(ctx.strokeStyle);
+})
+$("#clear").click(function(){
+  if(window.confirm("クリアしてよろしいですか？"))clear();
+});
+$("#prev").click(prevHist);
+$("#next").click(nextHist);
+$("#hist").click(clearHist);
+clear();
 
-  //カラーパレット生成
-  makePalletes();
+//カラーパレット生成
+makePalletes();
 });
 
 function drawStart(){
@@ -53,17 +56,27 @@ function drawStart(){
 function mousepos(x, y, mb) {
   mx = x - canvas.offsetLeft;
   my = y - canvas.offsetTop;
-  //  $("#debug").html("mx:"+mx+" my:"+my);
+  //$("#debug").html("mx:"+mx+" my:"+my);
   if(mb == "1"){
     line(mx+0.5, my+0.5);
     if(mx>=0 && mx<=640 && my>=0 && my<=480)choverflg=true;
   }
 }
 function line(x, y){
-  ctx.lineTo(x, y);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x, y);
+  ctx.lineTo(x,y);
+  if(alpha==1){
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+}
+function drawEnd(){
+  if(alpha!=1)ctx.stroke();
+  if(choverflg){
+    ind++;
+    saveCtx();
+    choverflg = false;
+  }
 }
 
 function clear(){
@@ -71,7 +84,7 @@ function clear(){
   clearHist();
 }
 function whiteRect(){
-  fillStyleBuf = ctx.fillStyle;
+  var fillStyleBuf = ctx.fillStyle;
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(0,0,640,480);
   ctx.fillStyle = fillStyleBuf;
@@ -126,39 +139,49 @@ function buttonReload(){
 function makePalletes(){
   var tar = $("#palletes");
   var palletNo = 26;
-  var r,g,b,rn,gn,bn;
   var color;
+  var selectcolor;
   for(i=0;i<palletNo;i++){
     switch(i){
       case palletNo-1:
-        r = "00";
-        b = "00";
-        g = "00";
+        color = "#000000";
         break;
       case palletNo-2:
-        r = "FF";
-        b = "FF";
-        g = "FF";
+        color = "#FFFFFF";
         break;
       default:
-        rn = Math.floor(Math.random()*256);
-        gn = Math.floor(Math.random()*256);
-        bn = Math.floor(Math.random()*256);
-        r = ("00"+rn.toString(16)).slice(-2);
-        g = ("00"+gn.toString(16)).slice(-2);
-        b = ("00"+bn.toString(16)).slice(-2);
+        color = colorGen();
         break;
     }
-    color = 'black';
-    tar.append('<div class="pallete" style="background-color:#'+r+g+b+';"></div>').children(":last").click(function(){
-      ctx.fillStyle = $(this).css("background-color");
-      ctx.strokeStyle = $(this).css("background-color");
+    selectcolor = 'black';
+    tar.append('<div class="pallete" style="background-color:'+color+';"></div>').children(":last").click(function(){
+      var alphacolor = changeAlpha($(this).css("background-color"));
+      ctx.fillStyle = ctx.strokeStyle = alphacolor;
       $("#palletes").children().each(function(){
         $(this).children(":first").removeClass("selected");
       })
       $(this).children(":first").addClass("selected");
-    }).append('<div style="border:2px solid '+color+'"></div>');
+    }).append('<div style="border:2px solid '+selectcolor+'"></div>');
   }
+  tar.append('<div class="pallete"><input type="color"></div>')
+}
+function colorGen(){ 
+  var buf = Math.floor(Math.random()*16777215).toString(16);
+  buf = ("000" + buf).slice(-6);
+  return '#'+buf;
+}
+//16進数rgb形式の色文字列をrgbaに変換する
+function changeAlpha(color){
+  if(color[0]=='r'){
+    return color.replace(/\d\.\d+\)/,alpha+')');
+  }
+  var r = color.substr(1,2);
+  var g = color.substr(3,2);
+  var b = color.substr(5,2);
+  r = parseInt(r,16);
+  g = parseInt(r,16);
+  b = parseInt(r,16);
+  return 'rgba('+r+','+g+','+b+','+alpha.toString()+')'; 
 }
 
 function getBrowser(){
