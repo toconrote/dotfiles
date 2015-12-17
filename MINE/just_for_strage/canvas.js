@@ -50,28 +50,40 @@ makePalletes();
 });
 
 function drawStart(){
+  beginImage = ctx.getImageData(0,0,640,480);
+  pathPos = null;
+  pathPos = [{"x":mx,"y":my}];
   ctx.beginPath();
-  ctx.moveTo(mx, my);
+  ctx.moveTo(mx+0.5, my+0.5);
 }
 function mousepos(x, y, mb) {
   mx = x - canvas.offsetLeft;
   my = y - canvas.offsetTop;
-  //$("#debug").html("mx:"+mx+" my:"+my);
+  $("#debug").html("mx:"+mx+" my:"+my);
   if(mb == "1"){
+    pathPos.push({"x":mx+0.5, "y":my+0.5});
     line(mx+0.5, my+0.5);
-    if(mx>=0 && mx<=640 && my>=0 && my<=480)choverflg=true;
+    var w = ctx.lineWidth;
+    if(mx>=0-w && mx<=640+w && my>=0-w && my<=480+w)choverflg=true;
   }
 }
 function line(x, y){
-  ctx.lineTo(x,y);
-  if(alpha==1){
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x, y);
+  //ctx.lineTo(x,y);
+  //if(alpha==1){
+  ctx.putImageData(beginImage,0,0);
+  ctx.beginPath();
+  for(var i=0;i<pathPos.length;i++){
+    if(i===0){
+      ctx.moveTo(pathPos[i]["x"], pathPos[i]["y"]);
+    } else {
+      ctx.lineTo(pathPos[i]["x"], pathPos[i]["y"]);
+    }
   }
+  ctx.stroke();
+  //}
 }
 function drawEnd(){
-  if(alpha!=1)ctx.stroke();
+  //if(alpha!=1)ctx.stroke();
   if(choverflg){
     ind++;
     saveCtx();
@@ -163,7 +175,7 @@ function makePalletes(){
       $(this).children(":first").addClass("selected");
     }).append('<div style="border:2px solid '+selectcolor+'"></div>');
   }
-  tar.append('<div class="pallete"><input type="color"></div>')
+  tar.append('<div class="pallete" style="display:none;"><input type="color"></div>')
 }
 function colorGen(){ 
   var buf = Math.floor(Math.random()*16777215).toString(16);
@@ -173,14 +185,15 @@ function colorGen(){
 //16進数rgb形式の色文字列をrgbaに変換する
 function changeAlpha(color){
   if(color[0]=='r'){
-    return color.replace(/\d\.\d+\)/,alpha+')');
+    return color.replace(/rgba?(\(\d+, \d+, \d+)(, \d\.\d+)?\)/,'rgba$1, '+alpha+')');
   }
+  if(color[0]!='#')return color;
   var r = color.substr(1,2);
   var g = color.substr(3,2);
   var b = color.substr(5,2);
   r = parseInt(r,16);
-  g = parseInt(r,16);
-  b = parseInt(r,16);
+  g = parseInt(g,16);
+  b = parseInt(b,16);
   return 'rgba('+r+','+g+','+b+','+alpha.toString()+')'; 
 }
 

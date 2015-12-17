@@ -16,6 +16,11 @@ div.content_center{
   text-align: center;
   width: 1140px;
 }
+.clearfix:after {
+  content: "";
+  clear: both;
+  display: block;
+}
 div.pallete {
   float: left;
   width: 60px;
