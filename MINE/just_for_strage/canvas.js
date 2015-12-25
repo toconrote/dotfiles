@@ -8,13 +8,14 @@ $(function(){
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   ctx.lineWidth = 3;
+  buffers = [{"pos":"","style":"","width":""}];
   alpha = 1.0;
-  buffers = [];
   MAXHIST = -1;
   ind = 0;
   mx = 0;
   my = 0;
   choverflg = false;
+  notLineFLg = false;
 
   //イベント関連
   $("body").mousedown(function(eo){if(eo.which=="1")drawStart()});
@@ -43,6 +44,11 @@ $("#clear").click(function(){
 $("#prev").click(prevHist);
 $("#next").click(nextHist);
 $("#hist").click(clearHist);
+$("#send").click(sendImage);
+$(".notLine").mousedown(function(){
+  notLineFlg=true;
+});
+
 clear();
 
 //カラーパレット生成
@@ -57,17 +63,18 @@ function drawStart(){
   ctx.moveTo(mx+0.5, my+0.5);
 }
 function mousepos(x, y, mb) {
+  if(notLineFlg)return;
   mx = x - canvas.offsetLeft;
   my = y - canvas.offsetTop;
-  $("#debug").html("mx:"+mx+" my:"+my);
+  // $("#debug").html("mx:"+mx+" my:"+my);
   if(mb == "1"){
     pathPos.push({"x":mx+0.5, "y":my+0.5});
-    line(mx+0.5, my+0.5);
+    line();
     var w = ctx.lineWidth;
     if(mx>=0-w && mx<=640+w && my>=0-w && my<=480+w)choverflg=true;
   }
 }
-function line(x, y){
+function line(){
   //ctx.lineTo(x,y);
   //if(alpha==1){
   ctx.putImageData(beginImage,0,0);
@@ -85,10 +92,12 @@ function line(x, y){
 function drawEnd(){
   //if(alpha!=1)ctx.stroke();
   if(choverflg){
+    saveHist();
     ind++;
-    saveCtx();
     choverflg = false;
+    buttonReload();
   }
+  notLineFlg=false;
 }
 
 function clear(){
@@ -96,44 +105,63 @@ function clear(){
   clearHist();
 }
 function whiteRect(){
-  var fillStyleBuf = ctx.fillStyle;
+  var buf_style = ctx.fillStyle;
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(0,0,640,480);
-  ctx.fillStyle = fillStyleBuf;
+  ctx.fillStyle = buf_style;
 }
 function clearHist(){
   ind=0;
   buffers = null; //メモリ開放
   buffers = [];
-  saveCtx();
+  buttonReload();
 }
 
 function prevHist(){
   if(ind==0)return;
   ind--;
-  loadCtx(ind);
+  loadHist(ind);
+  buttonReload();
 }
 function nextHist(){
-  if(ind==buffers.length-1)return;
+  if(ind==buffers.length)return;
   ind++;
-  loadCtx(ind);
+  loadHist(ind);
+  buttonReload();
 }
 
-function saveCtx(){
+function saveHist(){
   if(ind==MAXHIST){
     buffers.shift();
     ind = MAXHIST-1;
   }
-  buffers[ind] = ctx.getImageData(0, 0, 640, 480);
+  var buf = new Object();
+  buf = {"pos":pathPos,"style":ctx.strokeStyle,"width":ctx.lineWidth};
+  buffers[ind] = buf;
   if(buffers.length > ind+1){
     buffers.splice(ind+1, buffers.length-ind-1);
   }
-  buttonReload();
 }
-function loadCtx(ind){
+function loadHist(ind){
   whiteRect();
-  ctx.putImageData(buffers[ind],0, 0);
-  buttonReload();
+  var buf_style = ctx.strokeStyle;
+  var buf_width = ctx.lineWidth;
+  for(var j=0;j<ind;j++){
+    ctx.strokeStyle = buffers[j]["style"];
+    ctx.lineWidth = buffers[j]["width"];
+    ctx.beginPath();
+    pathPos=buffers[j]["pos"];
+    for(var i=0;i<pathPos.length;i++){
+      if(i===0){
+        ctx.moveTo(pathPos[i]["x"], pathPos[i]["y"]);
+      } else {
+        ctx.lineTo(pathPos[i]["x"], pathPos[i]["y"]);
+      }
+    }
+    ctx.stroke();
+  }
+  ctx.strokeStyle = buf_style;
+  ctx.lineWidth = buf_width;
 }
 function buttonReload(){
   if(ind==0){
@@ -141,7 +169,7 @@ function buttonReload(){
   } else {
     $("#prev").removeAttr("disabled");
   }
-  if(ind==buffers.length-1){
+  if(ind==buffers.length){
     $("#next").attr("disabled", "disabled");
   } else {
     $("#next").removeAttr("disabled");
@@ -195,20 +223,32 @@ function changeAlpha(color){
   g = parseInt(g,16);
   b = parseInt(b,16);
   return 'rgba('+r+','+g+','+b+','+alpha.toString()+')'; 
-}
+      }
+      function getBrowser(){
+        var ua = window.navigator.userAgent.toLowerCase();
+        if(ua.indexOf('msie')!=-1){
+          alert('IEは非対応です');
+          return false;
+        }
+        if(ua.indexOf('chrome')!=-1){
+          return false;
+        }
+        if(ua.indexOf('firefox')!=-1){
+          return true;
+        }
+        alert('推奨環境はGoogle ChromeとFirefoxの最新verです。\nあと、IEだと絶対に動きません。');
+        return false;
+      }
 
-function getBrowser(){
-  var ua = window.navigator.userAgent.toLowerCase();
-  if(ua.indexOf('msie')!=-1){
-    alert('IEは非対応です');
-    return false;
-  }
-  if(ua.indexOf('chrome')!=-1){
-    return false;
-  }
-  if(ua.indexOf('firefox')!=-1){
-    return true;
-  }
-  alert('推奨環境はGoogle ChromeとFirefoxの最新verです。\nあと、IEだと絶対に動きません。');
-  return false;
-}
+      function sendImage(){
+        if(!window.confirm('送信してよろしいですか？'))return;
+        $("#send").attr("disabled");
+        $.post('sendImage.php', {"id":"0","data":canvas.toDataURL()}, function(data, mystatus){
+          if(data==='ok' && mystatus==='success'){
+            location.href = 'sendOK.html';
+          } else {
+            alert('なんか送信に失敗したのでもう一度お願いします')
+          $("#send").removeAttr("disabled");
+          }
+        });
+      }
