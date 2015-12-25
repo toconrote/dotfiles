@@ -50,7 +50,6 @@ if($result = $db->query('select islock from odai where id = 1;')){
   <input id="next" type="button" value="やり直し" class="notLine">
   <input id="hist" type="button" value="履歴消去" style="display:none;" class="notLine">
   <input id="send" type="button" value="完成(送信)" class="notLine">
-  <p>※注：１ストロークあたりおよそ1200KBのメモリを消費するのでこまめに履歴消去推奨</p>
 </div>
 </body>
 </html>

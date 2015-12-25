@@ -15,7 +15,7 @@ $(function(){
   mx = 0;
   my = 0;
   choverflg = false;
-  notLineFLg = false;
+  notLineFlg = false;
 
   //イベント関連
   $("body").mousedown(function(eo){if(eo.which=="1")drawStart()});
