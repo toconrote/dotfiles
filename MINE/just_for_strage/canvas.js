@@ -16,43 +16,79 @@ $(function(){
   my = 0;
   choverflg = false;
   notLineFlg = false;
+  offset = 0;
+  konmai = [38,38,40,40,37,39,37,39,66,65];
 
-  //イベント関連
+  /*イベント関連******************************************************/
+  //クリック
   $("body").mousedown(function(eo){if(eo.which=="1")drawStart()});
-  $("body").mouseup(function(){drawEnd();})
-    $("body").mousemove(function(eo){
-      var mb = 0;
-      if(ffflg){
-        if(eo.buttons == 1){
-          mb = "1";
-        }
-      } else {
-        mb = eo.which;
+  $("body").mouseup(function(){
+    drawEnd();
+  });
+  $("body").mousemove(function(eo){
+    var mb = 0;
+    if(ffflg){
+      if(eo.buttons == 1){
+        mb = "1";
       }
-      mousepos(eo.pageX, eo.pageY, mb)
-    });
-$("#linewidth").change(function(){
-  ctx.lineWidth = this.value;
-})
-$("#alpha").change(function(){
-  alpha = (this.value / 0.1)*0.1;
-  ctx.fillStyle = ctx.strokeStyle = changeAlpha(ctx.strokeStyle);
-})
-$("#clear").click(function(){
-  if(window.confirm("クリアしてよろしいですか？"))clear();
-});
-$("#prev").click(prevHist);
-$("#next").click(nextHist);
-$("#hist").click(clearHist);
-$("#send").click(sendImage);
-$(".notLine").mousedown(function(){
-  notLineFlg=true;
-});
+    } else {
+      mb = eo.which;
+    }
+    mousepos(eo.pageX, eo.pageY, mb);
+  });
 
-clear();
+  //input
+  $("#linewidth").change(function(){
+    ctx.lineWidth = this.value;
+  })
+  $("#alpha").change(function(){
+    alpha = (this.value / 0.1)*0.1;
+    ctx.fillStyle = ctx.strokeStyle = changeAlpha(ctx.strokeStyle);
+  })
 
-//カラーパレット生成
-makePalletes();
+  //ボタン
+  $("#clear").click(function(){
+    if(window.confirm("クリアしてよろしいですか？"))clear();
+  });
+  $("#prev").click(prevHist);
+  $("#next").click(nextHist);
+  $("#hist").click(clearHist);
+  $("#send").click(sendImage);
+  $(".notLine").mousedown(function(){
+    notLineFlg=true;
+  });
+
+  //キー
+  $("body").keydown(function(eo){
+    switch(eo.which){
+      case 82: //R
+        if(eo.ctrlKey){
+          $("#next").click();
+        }
+        break;
+      case 90: //Z
+        if(eo.ctrlKey){
+          $("#prev").click();
+        }
+        break;
+      default: //コマンド
+        if(eo.which == konmai[offset]){
+          offset++;
+          if(offset === konmai.length){
+            $(".cheat").toggleClass("debug");
+            offset = 0;
+          }
+        } else {
+          offset = 0;
+        }
+    }
+  });
+
+  //キャンバス白初期化
+  clear();
+
+  //カラーパレット生成
+  makePalletes();
 });
 
 function drawStart(){
@@ -203,7 +239,10 @@ function makePalletes(){
       $(this).children(":first").addClass("selected");
     }).append('<div style="border:2px solid '+selectcolor+'"></div>');
   }
-  tar.append('<div class="pallete" style="display:none;"><input type="color"></div>')
+  tar.append('<div class="pallete"><input id="cp" type="color" class="debug cheat"></div>').append('<div class="pallete"><input type="button" value="変更" class="debug cheat" id="cc"></div>').find("#cc").click(function(){
+    var alphacolor = changeAlpha(document.getElementById("cp").value);
+    ctx.fillStyle = ctx.strokeStyle = alphacolor;
+  });
 }
 function colorGen(){ 
   var buf = Math.floor(Math.random()*16777215).toString(16);
@@ -223,32 +262,33 @@ function changeAlpha(color){
   g = parseInt(g,16);
   b = parseInt(b,16);
   return 'rgba('+r+','+g+','+b+','+alpha.toString()+')'; 
-      }
-      function getBrowser(){
-        var ua = window.navigator.userAgent.toLowerCase();
-        if(ua.indexOf('msie')!=-1){
-          alert('IEは非対応です');
-          return false;
-        }
-        if(ua.indexOf('chrome')!=-1){
-          return false;
-        }
-        if(ua.indexOf('firefox')!=-1){
-          return true;
-        }
-        alert('推奨環境はGoogle ChromeとFirefoxの最新verです。\nあと、IEだと絶対に動きません。');
-        return false;
-      }
+}
 
-      function sendImage(){
-        if(!window.confirm('送信してよろしいですか？'))return;
-        $("#send").attr("disabled");
-        $.post('sendImage.php', {"id":"0","data":canvas.toDataURL()}, function(data, mystatus){
-          if(data==='ok' && mystatus==='success'){
-            location.href = 'sendOK.html';
-          } else {
-            alert('なんか送信に失敗したのでもう一度お願いします')
-          $("#send").removeAttr("disabled");
-          }
-        });
-      }
+function getBrowser(){
+  var ua = window.navigator.userAgent.toLowerCase();
+  if(ua.indexOf('msie')!=-1){
+    alert('IEは非対応です');
+    return false;
+  }
+  if(ua.indexOf('chrome')!=-1){
+    return false;
+  }
+  if(ua.indexOf('firefox')!=-1){
+    return true;
+  }
+  alert('推奨環境はGoogle ChromeとFirefoxの最新verです。\nあと、IEだと絶対に動きません。');
+  return false;
+}
+
+function sendImage(){
+  if(!window.confirm('送信してよろしいですか？'))return;
+  $("#send").attr("disabled");
+  $.post('sendImage.php', {"id":"0","data":canvas.toDataURL()}, function(data, mystatus){
+    if(data==='ok' && mystatus==='success'){
+      location.href = 'sendOK.html';
+    } else {
+      alert('なんか送信に失敗したのでもう一度お願いします')
+    $("#send").removeAttr("disabled");
+    }
+  });
+}

@@ -36,5 +36,15 @@ div.pallete>div.selected {
   margin-top: -1px;
   border: 2px solid;
 }
-@media only screen and (max-width: 600px){
+div.float-box {
+  float: left;
+  width: 400px;
+  margin-left: 20px;
+}
+div.float-box>div {
+  float: left;
+}
+
+.debug {
+  display: none;
 }
