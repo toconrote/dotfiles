@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>タイトル</title>
+<style>
+h1 {
+  font-size: 14pt;
+  padding: 1px 10px;
+  border-style: solid;
+  border-width: 0px 0px 2px 7px;
+  border-color: green;
+}
+
+body {
+  background: #EEFFEE;
+}
+
+article {
+  background: white;
+  margin: 10px 0px;
+  padding: 10px;
+}
+</style>
+<script src="/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+var EventSource = window.EventSource || window.MozEventSource;
+function initial() {
+  if (!EventSource) {
+    alert("EventSourceが利用できません。");
+    return;
+  }
+  var source = new EventSource('ss.php');
+  source.onmessage = function(event) {
+    var tar = $("#main");
+    msgstr = JSON.parse(event.data);
+    var datahtml = '';
+    for (key in msgstr) {
+      //TASK
+    }
+  };
+}
+$(function(){
+  initial();
+});
+</script>
+</head>
+<body>
+<header>
+  <h1>マラソンマン</h1>
+</header>
+<input type="number" id="server" value="1" min="1" max="40">鯖
+<input type="button" id="add" value="追加" onclick="addServer()">
+<table>
+  <tbody id="main">
+  </tbody>
+</table>
+<script>
+function addServer(){
+  var serverNo = $("#server").val();
+  if(serverCheck(serverNo)){
+    alert("その鯖はもう追加されてるようです");
+    return;
+  }
+  send("server", serverNo);
+}
+function serverCheck(no){
+  var dupflg = false;
+  $("#main").children().each(function(){
+    if($(this).attr("id") == no){
+      dupflg = true;
+    }
+  });
+  return dupflg;
+}
+function send(mode, val) {
+  $.post("sendmsg.php", {
+    "mode" : mode,
+    "val" : msg
+  },
+  function(data, status) {
+    if (status != "success") {
+      alert("なんか失敗した");
+    }
+  });
+}
+</script>
+</body>
+</html>
