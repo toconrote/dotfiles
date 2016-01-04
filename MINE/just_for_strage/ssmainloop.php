@@ -1,4 +1,4 @@
-<?php
+<?php //共有メモリ内に変更があればメモリデータ全てを送るssevent用phpファイル
 header("Content-Type: text/event-stream\n\n");
 $systemid = 864; // System ID for the shared memory segment
 $mode = "c"; // Access mode

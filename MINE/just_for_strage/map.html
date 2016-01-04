@@ -30,7 +30,7 @@ function initial() {
     alert("EventSourceが利用できません。");
     return;
   }
-  var source = new EventSource('ss.php');
+  var source = new EventSource('ssmainloop.php');
   source.onmessage = function(event) {
     var tar = $("#main");
     msgstr = JSON.parse(event.data);
@@ -62,7 +62,7 @@ function addServer(){
     alert("その鯖はもう追加されてるようです");
     return;
   }
-  send("server", serverNo);
+  addserver(serverNo);
 }
 function serverCheck(no){
   var dupflg = false;
@@ -73,10 +73,9 @@ function serverCheck(no){
   });
   return dupflg;
 }
-function send(mode, val) {
-  $.post("sendmsg.php", {
-    "mode" : mode,
-    "val" : msg
+function addserver(val) {
+  $.post("addserver.php", {
+    "val" : val
   },
   function(data, status) {
     if (status != "success") {
