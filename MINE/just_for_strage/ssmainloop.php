@@ -1,18 +1,25 @@
 <?php //共有メモリ内に変更があればメモリデータ全てを送るssevent用phpファイル
 header("Content-Type: text/event-stream\n\n");
-$systemid = 864; // System ID for the shared memory segment
-$mode = "c"; // Access mode
-$permissions = 0755; // Permissions for the shared memory segment
-$size = 1024; // Size, in bytes, of the segment
 
-$shmid = shmop_open($systemid, $mode, $permissions, $size);
+require_once 'shm.php';
 
+$buf = new array(40);
+$points = new array(40)
 while (1) {
 
-  $msgs = preg_replace('/\0/','',shmop_read($shmid, 0, 1024));
-  if ($msgs != $buf) {
-    echo "data:$msgs" . "\n\n";
-    $buf = $msgs;
+  $points = shm_get_var($id, $pointskey);
+  if ($points != $buf) {
+    $data = [];
+    for($i=0;$i<40;$i++){
+      for($j=0;$j<40;$j++){
+        if($points[$i][$j] != buf[$i][$j]){
+          $data[] = [$i, $j, $points[$i][$j]];
+        }
+      }
+    }
+    $data = json_encode($data);
+    echo "data:$data" . "\n\n";
+    $buf = $points;
   }
 
   ob_flush();
