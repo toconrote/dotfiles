@@ -7,14 +7,7 @@ $no = $_POST['no'];
 
 require_once 'shm.php';
 
-if(!addpoint($server, $no)){
-  echo 'なんか追加失敗した';
-  die;
-}
+addpoint($server, $no);
 
 flush();
 ob_flush();
-
-sleep(300);
-
-deletepoint($server, $no);
