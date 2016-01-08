@@ -14,6 +14,15 @@
   margin-bottom: 20px;
 }
 
+#tanin {
+  border: 1px solid;
+  padding: 5px;
+  width: 60%;
+}
+#tanin span {
+  margin-right: 10px;
+}
+
 /*table*****************************/
 table{
   border-collapse: collapse;

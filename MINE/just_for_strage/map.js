@@ -27,6 +27,14 @@ var pointdata = [{
   "points":[1,2,3,4]
 }];
 $(function(){
+  //現在の報告一覧をDL
+  $.getJSON("loadpoint.php", function(data, status){
+    var len = data.length;
+    for(var i=0;i<len;i++){
+      addList(data[i][0], data[i][1]);
+    }
+  });
+
   initial();
 
   //th作成
@@ -66,7 +74,7 @@ function initial() {
       if(gottenNo.indexOf(sabun[i][1]) != -1)continue;
       if(sabun[i][2]){
         //取得報告のとき
-        $("#tanin").append('<div class="'+sabun[i][0]+'-'+sabun[i][1]+'"><span>'+sabun[i][0]+'鯖</span><span>'+sabun[i][1]+'</span><input type="button" onclick="getPoint(this);" value="取得"><input type="button" onclick="vanish(this);" value="消失">');
+        addList(sabun[i][0], sabun[i][1]);
       } else {
         //消失報告のとき
         vanishBy(sabun[i][0], sabun[i][1]);
@@ -74,6 +82,10 @@ function initial() {
     }
     console.log(sabun);
   };
+}
+function addList(server, no){
+  $("#tanin").append('<div class="'+server+'-'+no+'"><span>'+server+'鯖</span><span>'+no+'</span><input type="button" onclick="getPoint(this);" value="取得"><input type="button" onclick="vanish(this);" value="消失">');
+  return;
 }
 //サーバーの追加
 function addServer(){
@@ -140,9 +152,11 @@ function deletePoint(server, no){
   });
 }
 
+//消失ボタン
 function getPoint(ele){
   var buf = $(ele).parent().attr("class").split('-');
   var no = buf[1];
+  gottenNo.push(no);
   var col = main.find("."+no);
   $("thead").find(".th"+no).addClass("gotten");
   col.each(function(){
@@ -175,4 +189,8 @@ function vanishBy(server, no){
 function deleteReport(ele){
   ele.remove();
   return;
+}
+
+function resetPoint(){
+  $.post("reset.php");
 }

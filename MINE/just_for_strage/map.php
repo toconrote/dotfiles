@@ -2,15 +2,12 @@
 <html lang="ja">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>標章管理</title>
+<title>マランソマソ</title>
 <script src="/jquery/jquery-1.11.3.min.js"></script>
 <script src="map.js"></script>
 <link href="map.css" rel="stylesheet">
 </head>
 <body>
-<header>
-  <h1>標章管理</h1>
-</header>
 <div class="left-box float">
   <div class="mapimg">
     <img src="map.png">
@@ -36,8 +33,9 @@
 </div>
 <div class="right-box float">
   <div>
-    <input type="button" value="報告順">
-    <input type="button" value="遠い順">
+    <!-- <input type="button" value="報告順"> -->
+    <!-- <input type="button" value="遠い順"> -->
+    <input type="button" value="報告リセット" onclick="resetPoint()">
   </div>
   <div id="tanin">
   </div>

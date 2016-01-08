@@ -1,6 +1,6 @@
 <?php
-$pid = shm_attach(1386, 100000);
-$lid = shm_attach(9948, 10);
+$pid = connect(1386, 100000);
+$lid = connect(9948, 10);
 $autodeltime = 300;
 
 function addpoint($server, $no){
@@ -28,6 +28,11 @@ function loadpoint(){
   return shm_get_points();
 }
 
+function resetpoint(){
+  shm_put_points(makepoints());
+  return;
+}
+
 function waitlock(){
   while(shm_get_lock()){
     usleep(10000);
@@ -41,7 +46,7 @@ function unlock(){
   return;
 }
 
-function shm_attach($shm_key, $size){
+function connect($shm_key, $size){
   return shmop_open($shm_key, "c", 0644, $size);
 }
 function shm_put_lock($var){
