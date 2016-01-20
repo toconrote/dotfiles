@@ -9,9 +9,11 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 #IfWinActive ahk_class Chrome_WidgetWin_1
 sc070::!Right
 #IfWinActive
+#IfWinNotActive ahk_class XLMAIN
 ;; Muhenkan -> Esc
 sc07B::Escape
 ^sc07B::Send, {Escape}
+#IfWinNotActive
 
 ;; Henkan -> BS
 vk1Csc079::Backspace
@@ -21,6 +23,9 @@ sc070::Delete
 
 ;; Ctrl+Space -> Enter
 ^Space::Send, {Enter}
+
+;; Ctrl+';' ->Enter
+^vkBBsc027::Send, {Enter}
 
 ;; Ctrl+hjkl
 ^h::Send, {Left}
@@ -42,6 +47,9 @@ sc070::Delete
 
 ;; Ctrl+p -> %
 ^p::Send, `%
+
+;; Ctrl+@ -> \
+^@::Send, \
 
 ;; LCtrl+<> -> Alt+(Shift)Tab
 LCtrl & <::ShiftAltTab
