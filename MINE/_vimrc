@@ -91,7 +91,7 @@ nnoremap <Space>P "*P
 nnoremap <silent> <Esc> :noh<CR>
 
 "Ctrl+\でquickrun
-nnoremap <C-\> :QuickRun<CR>
+nnoremap <C-\> :QuickRun -runner vimproc<CR>
 
 "Ctul+Shift+Fで全体整形
 function! s:format_file()

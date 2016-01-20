@@ -22,6 +22,7 @@ NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'Shougo/vimproc.vim'
 
 call neobundle#end()
 
@@ -105,7 +106,10 @@ let g:neocomplcache_enable_at_startup = 1
 let g:quickrun_config = {
 \   "_" : {
 \       "outputter/buffer/split" : ":botright 8sp",
-\       "outputter/buffer/close_on_empty" : 1
+\       "outputter/buffer/close_on_empty" : 1,
+\       "runner" : "vimproc",
+\       "runner/vimproc/updatetime" : 60
 \   },
 \}
 
+""""""" vimproc
