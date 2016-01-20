@@ -21,6 +21,7 @@ NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'thinca/vim-quickrun'
 
 call neobundle#end()
 
@@ -99,3 +100,12 @@ let g:restart_sessionoptions
 """"""" neocomplecache
 " プラグイン有効化
 let g:neocomplcache_enable_at_startup = 1
+
+""""""" quickrun
+let g:quickrun_config = {
+\   "_" : {
+\       "outputter/buffer/split" : ":botright 8sp",
+\       "outputter/buffer/close_on_empty" : 1
+\   },
+\}
+

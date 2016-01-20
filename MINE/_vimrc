@@ -12,7 +12,7 @@ command! Eplug e $home/vimfiles/userautoload/plugins.vim
 colorscheme hybrid
 
 set fileencoding=utf-8
-set fileencodings=utf-8,shift-JIS
+set fileencodings=utf-8
 
 set number
 set nocompatible
@@ -89,6 +89,9 @@ nnoremap <Space>P "*P
 
 "Escで検索ハイライト解除
 nnoremap <silent> <Esc> :noh<CR>
+
+"Ctrl+\でquickrun
+nnoremap <C-\> :QuickRun<CR>
 
 "Ctul+Shift+Fで全体整形
 function! s:format_file()
