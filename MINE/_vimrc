@@ -1,10 +1,9 @@
 " 個人用：まだまだ洗練されていないので参考にはしないでね
+let $HOME=expand('C:\vimhome\')
+
 source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/macros/matchit.vim
 
-"userautoload以下に移動
-" set directory=C:/Temp/vim_swap
-" set backupdir=C:/Temp/vim_backup
 runtime! userautoload/*.vim
 command! Euser e $home/vimfiles/userautoload/usersetting.vim
 command! Eplug e $home/vimfiles/userautoload/plugins.vim
@@ -64,12 +63,12 @@ inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
 
 "Ctrl+iで半角全角(AHKでCtrl+iを半角全角に割り当ててある)"
 inoremap <C-i> nop
+inoremap <C-i> <C-^>
 
 "</で自動タグ補完
 autocmd FileType html inoremap <silent> <buffer> </ </<C-x><C-o>
 
 """"""●ノーマルモード
-inoremap <C-i> <C-^>
 "■Ctrl+移動で５ずつ移動(AHKでCtrl+hjklをカーソルに割り当ててある)"
 nnoremap <Left> 5h
 nnoremap <Down> 5j
@@ -79,6 +78,9 @@ nnoremap <Right> 5l
 "Ctrl+WをSpace,Wに
 nnoremap <Space>w <C-w>
 nnoremap <Space>wv <C-w>v<C-w>l
+
+"Ctrl+Aで全選択
+nnoremap <C-a> ggVG
 
 "UTF8で開きなおす"
 nnoremap <silent> <F8> :set encoding=UTF-8<CR>
@@ -93,13 +95,19 @@ nnoremap <silent> <Esc> :noh<CR>
 "Ctrl+\でquickrun
 nnoremap <C-\> :QuickRun -runner vimproc<CR>
 
-"Ctul+Shift+Fで全体整形
+"Ctul+Fで全体整形
 function! s:format_file()
   let view = winsaveview()
   normal gg=G
   silent call winrestview(view)
 endfunction
 nnoremap <C-F> :call <SID>format_file()<CR>
+
+"Ctrl+Delで次行と連結
+nnoremap <C-Del> j<S-V>:s/\v^\s*//g<CR><S-I><BS><Esc><Esc>
+
+""""""●ビジュアルモード
+vnoremap <Space>y "*y
 
 """""""""""""""""""""""""""""php"""""""""""""""""""""""""""""""""""""""
 let php_sql_query = 1
@@ -109,3 +117,75 @@ let php_noShortTags = 1
 let php_parent_error_close = 1
 
 let g:sql_type_default='mysql'
+
+" "Dvorak
+" ino - [
+" ino = ]
+" ino q '
+" ino w ,
+" ino e .
+" ino r p
+" ino t y
+" ino y f
+" ino u g
+" ino i c
+" ino o r
+" ino p l
+" ino [ /
+" ino ] =
+" ino a a
+" ino s o
+" ino d e
+" ino f u
+" ino g i
+" ino h d
+" ino j h
+" ino k t
+" ino l n
+" ino ; s
+" ino ' -
+" ino z ;
+" ino x q
+" ino c j
+" ino v k
+" ino b x
+" ino n b
+" ino m m
+" ino , w
+" ino . v
+" ino / z
+" ino _ {
+" ino + }
+" ino Q "
+" ino W <
+" ino E >
+" ino R P
+" ino T Y
+" ino Y F
+" ino U G
+" ino I C
+" ino O R
+" ino P L
+" ino { ?
+" ino } +
+" ino A A
+" ino S O
+" ino D E
+" ino F U
+" ino G I
+" ino H D
+" ino J H
+" ino K T
+" ino L N
+" ino : S
+" ino " _
+" ino Z :
+" ino X Q
+" ino C J
+" ino V K
+" ino B X
+" ino N B
+" ino M M
+" ino < W
+" ino > V
+" ino ? Z

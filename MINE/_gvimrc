@@ -1,7 +1,9 @@
 " 個人用：まだまだ洗練されていないので参考にはしないでね
 " VimのGUI版で使われるフォントのリストである。
-:set guifont=MS_Gothic:h12
-:set guifontwide=MS_Gothic:h12
+":set guifont=MS_Gothic:h12
+":set guifontwide=MS_Gothic:h12
+:set guifont=Consolas:h12:cSHIFTJIS
+:set guifontwide=Consolas:h12:cSHIFTJIS
 :set ambiwidth=double
 
 " 画面上の列幅を設定する。
