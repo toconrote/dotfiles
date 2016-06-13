@@ -22,8 +22,6 @@ MButton::Send, !{Enter}
 ;; 変換 or カタカナ/ひらがな -> 前のシート、次のシート(Ctrl+PageUpDown)
 ^vk1Csc079::PgUp
 ^sc070::PgDn
-;; Ctrl+Q -> F2
-^q::Send, {F2}
 #IfWinActive
 #IfWinNotActive ahk_class XLMAIN
 ;; 無変換 -> Esc
@@ -31,6 +29,8 @@ sc07B::Escape
 ^sc07B::Send, {Escape}
 #IfWinNotActive
 
+;; Ctrl+Q -> F2
+^q::Send, {F2}
 ;; 変換 -> バックスペース
 vk1Csc079::Backspace
 ;; カタカナ/ひらがな -> Del
