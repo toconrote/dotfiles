@@ -1,28 +1,56 @@
 """""""""""""""""""""""""プラギン"""""""""""""""""""""""""""""""""""""""
 ""NeoBundle""
 if has('vim_starting')
-   " 初回起動時のみruntimepathにneobundleのパスを指定する"
-   set runtimepath+=$home/vimfiles/bundle/neobundle.vim/
+  " 初回起動時のみruntimepathにneobundleのパスを指定する"
+  set runtimepath+=$home/vimfiles/bundle/neobundle.vim/
 endif
 
 " NeoBundleを初期化"
 call neobundle#begin(expand('$home/vimfiles/bundle/'))
 
 " インストールするプラグインをここに記述"
+" unite
 NeoBundle 'Shougo/unite.vim'
+" taglistを表示
 NeoBundle 'vim-scripts/taglist.vim'
+" ctagsの情報からハイライト
 NeoBundle 'vim-scripts/TagHighlight'
+" uniteにmruを追加
 NeoBundle 'Shougo/neomru.vim'
+" Ctrl+Eでエクスプローラ
 NeoBundle 'scrooloose/nerdtree'
+" カーソル移動
 NeoBundle 'Lokaltog/vim-easymotion'
+" サブモード定義を可能にする
 NeoBundle 'kana/vim-submode'
+" 閉じ括弧を自動挿入
 NeoBundle 'kana/vim-smartinput'
+" コメントアウト
 NeoBundle 'tomtom/tcomment_vim'
+" インデントに色をつけて階層がわかりやすくなる
 NeoBundle 'nathanaelkane/vim-indent-guides'
+" テキストオブジェクト拡張
 NeoBundle 'tpope/vim-surround'
+" コード補完
 NeoBundle 'Shougo/neocomplcache'
+" html入力補助
+NeoBundle 'mattn/emmet-vim'
+" URLをブラウザで開く
+NeoBundle 'open-browser.vim'
+" vimからwebapiを叩く
+NeoBundle 'mattn/webapi-vim'
+" css3用シンタックス
+NeoBundle 'hail2u/vim-css3-syntax'
+" html5用シンタックス
+NeoBundle 'taichouchou2/html5.vim'
+" js用２種
+"NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'jlebensold/reilly_restaurants'
+NeoBundle 'jiangmiao/simple-javascript-indenter'
+" quickrun.vim
 NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'Shougo/vimproc.vim'
+" haskell対応tag生成
+NeoBundle 'elaforge/fast-tags'
 
 call neobundle#end()
 
@@ -36,12 +64,6 @@ nnoremap <silent><C-e> :NERDTreeToggle<CR>
 
 """"""unite
 " ファイルは tabdrop で開く
-"call unite#custom#default_action('file' , 'vsplitswitch')
-"
-"""""" The prefix key.
-nnoremap    [unite]   <Nop>
-nmap    <Space>u [unite]
-
 ""let g:unite_source_history_yank_enable =1
 nnoremap <silent> [unite]u :<C-u>Unite<Space>file<CR>
 nnoremap <silent> [unite]g :<C-u>Unite<Space>grep<CR>
@@ -93,23 +115,47 @@ call submode#map('renmove', 'n', '', '<', '<C-w><')
 " vimを立ち上げたときに、自動的にvim-indent-guidesをオンにする
 let g:indent_guides_enable_on_vim_startup = 1
 
-""""""" restart
-" 終了時に保存するセッションオプションを設定する
-let g:restart_sessionoptions
-  \ = 'blank,buffers,curdir,folds,help,localoptions,tabpages'
-
 """"""" neocomplecache
 " プラグイン有効化
 let g:neocomplcache_enable_at_startup = 1
 
-""""""" quickrun
-let g:quickrun_config = {
-\   "_" : {
-\       "outputter/buffer/split" : ":botright 8sp",
-\       "outputter/buffer/close_on_empty" : 1,
-\       "runner" : "vimproc",
-\       "runner/vimproc/updatetime" : 60
-\   },
-\}
+""""""" emmet-vim
+let g:user_emmet_mode = 'iv'
+let g:user_emmet_leader_key = '<C-Y>'
+let g:use_emmet_complete_tag = 1
+let g:user_emmet_settings = {
+      \ 'lang' : 'ja',
+      \ 'html' : {
+      \   'filters' : 'html',
+      \   'self-closing-tag' : 'xhtml',
+      \   'indentation' : '  ',
+      \ },
+      \ 'css' : {
+      \   'filters' : 'fc',
+      \   'snippets': {'cmt1' : '/******** | ********/',},
+      \ },
+      \ 'php' : {
+      \   'extends' : 'html',
+      \   'filters' : 'html',
+      \ },
+      \}
+augroup EmmitVim
+  autocmd!
+  autocmd FileType * let g:user_emmet_settings.indentation = '               '[:&tabstop]
+augroup END
 
-""""""" vimproc
+""""""" open-browser.vim
+let g:netrw_nogx = 1 " disable netrw's gx mapping.
+nmap gx <Plug>(openbrowser-smart-search)
+vmap gx <Plug>(openbrowser-smart-search)
+
+""""""" quickrun.vim
+let b:quickrun_config = {'outputter/buffer/split' : "botright 8sp"}
+nnoremap <silent> \ :QuickRun<CR>
+" <C-c> で実行を強制終了させる
+" quickrun.vim が実行していない場合には <C-c> を呼び出す
+nnoremap <expr><silent> <C-c> quickrun#is_running() ? quickrun#sweep_sessions() : "\<C-c>"
+
+""""""" fast-tags
+au BufWritePost *.hs            silent !init-tags %
+au BufWritePost *.hsc           silent !init-tags %

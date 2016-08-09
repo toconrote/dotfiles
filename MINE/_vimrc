@@ -9,6 +9,8 @@ command! Euser e $home/vimfiles/userautoload/usersetting.vim
 command! Eplug e $home/vimfiles/userautoload/plugins.vim
 
 colorscheme hybrid
+autocmd ColorScheme * highlight jsFuncArgs guifg=#cc8888
+autocmd ColorScheme * highlight javaScriptComment guifg=#688068
 
 set fileencoding=utf-8
 set fileencodings=utf-8
@@ -41,6 +43,8 @@ syntax on
 set cursorline
 set mouse=a
 
+let g:html_indent_inctags = "tbody"
+
 """""""""""""""""""""""""""""キーマッピング"""""""""""""""""""""""""""""
 """"""●インサートモード"
 "■カーソル移動"
@@ -65,6 +69,8 @@ inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
 "Ctrl+iで半角全角(AHKでCtrl+iを半角全角に割り当ててある)"
 inoremap <C-i> nop
 inoremap <C-i> <C-^>
+
+inoremap <Tab> <tab>
 
 "</で自動タグ補完
 autocmd FileType html inoremap <silent> <buffer> </ </<C-x><C-o>
@@ -97,8 +103,8 @@ nnoremap <Space><S-;> "0P
 "Escで検索ハイライト解除
 nnoremap <silent> <Esc> :noh<CR>
 
-"Ctrl+\でquickrun
-nnoremap <C-\> :QuickRun -runner vimproc<CR>
+" "Ctrl+\でquickrun
+" nnoremap <C-\> :QuickRun -runner vimproc<CR>
 
 "Ctul+Fで全体整形
 function! s:format_file()
@@ -109,7 +115,7 @@ endfunction
 nnoremap <C-F> :call <SID>format_file()<CR>
 
 "Ctrl+Delで次行と連結
-nnoremap <silent> <C-Del> j<S-V>:s/\v^\s*//g<CR><S-I><BS><Esc> :noh<CR>
+nnoremap <silent> <C-Del> j<S-V>:s/\v^\s*\t*//g<CR><S-I><BS><Esc> :noh<CR>
 
 """"""●ビジュアルモード
 vnoremap <Space>y "*y
@@ -123,74 +129,42 @@ let php_parent_error_close = 1
 
 let g:sql_type_default='mysql'
 
-" "Dvorak
-" ino - [
-" ino = ]
-" ino q '
-" ino w ,
-" ino e .
-" ino r p
-" ino t y
-" ino y f
-" ino u g
-" ino i c
-" ino o r
-" ino p l
-" ino [ /
-" ino ] =
-" ino a a
-" ino s o
-" ino d e
-" ino f u
-" ino g i
-" ino h d
-" ino j h
-" ino k t
-" ino l n
-" ino ; s
-" ino ' -
-" ino z ;
-" ino x q
-" ino c j
-" ino v k
-" ino b x
-" ino n b
-" ino m m
-" ino , w
-" ino . v
-" ino / z
-" ino _ {
-" ino + }
-" ino Q "
-" ino W <
-" ino E >
-" ino R P
-" ino T Y
-" ino Y F
-" ino U G
-" ino I C
-" ino O R
-" ino P L
-" ino { ?
-" ino } +
-" ino A A
-" ino S O
-" ino D E
-" ino F U
-" ino G I
-" ino H D
-" ino J H
-" ino K T
-" ino L N
-" ino : S
-" ino " _
-" ino Z :
-" ino X Q
-" ino C J
-" ino V K
-" ino B X
-" ino N B
-" ino M M
-" ino < W
-" ino > V
-" ino ? Z
+""""""""""""""""""""""vimscript"""""""""""""""""""""""""""
+"カーソル下のhighlight情報を取得する
+function! s:get_syn_id(transparent)
+  let synid = synID(line("."), col("."), 1)
+  if a:transparent
+    return synIDtrans(synid)
+  else
+    return synid
+  endif
+endfunction
+function! s:get_syn_attr(synid)
+  let name = synIDattr(a:synid, "name")
+  let ctermfg = synIDattr(a:synid, "fg", "cterm")
+  let ctermbg = synIDattr(a:synid, "bg", "cterm")
+  let guifg = synIDattr(a:synid, "fg", "gui")
+  let guibg = synIDattr(a:synid, "bg", "gui")
+  return {
+        \ "name": name,
+        \ "ctermfg": ctermfg,
+        \ "ctermbg": ctermbg,
+        \ "guifg": guifg,
+        \ "guibg": guibg}
+endfunction
+function! s:get_syn_info()
+  let baseSyn = s:get_syn_attr(s:get_syn_id(0))
+  echo "name: " . baseSyn.name .
+        \ " ctermfg: " . baseSyn.ctermfg .
+        \ " ctermbg: " . baseSyn.ctermbg .
+        \ " guifg: " . baseSyn.guifg .
+        \ " guibg: " . baseSyn.guibg
+  let linkedSyn = s:get_syn_attr(s:get_syn_id(1))
+  echo "link to"
+  echo "name: " . linkedSyn.name .
+        \ " ctermfg: " . linkedSyn.ctermfg .
+        \ " ctermbg: " . linkedSyn.ctermbg .
+        \ " guifg: " . linkedSyn.guifg .
+        \ " guibg: " . linkedSyn.guibg
+endfunction
+command! SyntaxInfo call s:get_syn_info()

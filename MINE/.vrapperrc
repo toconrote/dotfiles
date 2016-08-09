@@ -1,16 +1,14 @@
 set imdisable=true
 behave mswin
 
-""colorscheme candystripe
-colorscheme jellybeans
+colorscheme hybrid
 
 set fileencoding=utf-8
-set fileencodings=utf-8,shift-JIS
+set fileencodings=utf-8
 
 set number
 
 set nocompatible
-""set tabstop=2
 set expandtab
 set ambiwidth=double
 set shiftwidth=2
@@ -42,6 +40,8 @@ syntax on
 set cursorline
 set mouse=a
 
+let g:html_indent_inctags = "tbody"
+
 """""""""""""""""""""""""""""キーマッピング"""""""""""""""""""""""""""""
 """"""●インサートモード"
 "■カーソル移動"
@@ -58,10 +58,17 @@ inoremap <S-BS> <Home>
 inoremap <S-DEL> <END>
 
 "■jjでEsc"
-inoremap <silent> jj <Esc>
+inoremap jj <Esc>:set iminsert=0<CR>
+
+"■Esc時imeオフ"
+inoremap <ESC> <ESC>:set iminsert=0<CR>
 
 "Ctrl+iで半角全角(AHKでCtrl+iを半角全角に割り当ててある)"
 inoremap <C-i> nop
+inoremap <C-i> <C-^>
+
+"</で自動タグ補完
+autocmd FileType html inoremap <buffer> </ </<C-x><C-o>
 
 """"""●ノーマルモード
 inoremap <C-i> <C-^>
@@ -73,13 +80,21 @@ nnoremap <Right> 5l
 
 "Ctrl+WをSpace,Wに
 nnoremap <Space>w <C-w>
+nnoremap <Space>wv <C-w>v<C-w>l
 
-"""""""""""""""""""""""""""""php"""""""""""""""""""""""""""""""""""""""
-let php_sql_query = 1
-let php_baselib = 1
-let php_hemlInStrings = 1
-let php_noShortTags = 1
-let php_parent_error_close = 1
+"Ctrl+Aで全選択
+nnoremap <C-a> ggVG
 
-let g:sql_type_default='mysql'
+"Space+p,Pでクリップボードペースト"
+nnoremap <Space>p "*p
+nnoremap <Space>P "*P
 
+"Space+;でヤンクしたテキストをペースト
+nnoremap <Space>; "0p
+nnoremap <Space><S-;> "0P
+
+"Escで検索ハイライト解除
+nnoremap <Esc> :noh<CR>
+
+""""""●ビジュアルモード
+vnoremap <Space>y "*y
