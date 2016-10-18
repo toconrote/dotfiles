@@ -21,7 +21,6 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
   ;; 無変換 or ホイールクリック -> (セル内改行)Alt + Enter
   sc07B::Send, !{Enter}
   ^sc07B::Send, !{Enter}
-  MButton::Send, !{Enter}
   ;; Ctrl+変換 or カタカナ/ひらがな -> 前のシート、次のシート(Ctrl+PageUpDown)
   ^vk1Csc079::PgUp
   ^sc070::PgDn
