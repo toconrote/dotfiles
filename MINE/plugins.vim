@@ -49,8 +49,6 @@ NeoBundle 'jlebensold/reilly_restaurants'
 NeoBundle 'jiangmiao/simple-javascript-indenter'
 " quickrun.vim
 NeoBundle 'thinca/vim-quickrun'
-" haskell対応tag生成
-NeoBundle 'elaforge/fast-tags'
 
 call neobundle#end()
 
@@ -150,12 +148,22 @@ nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
 
 """"""" quickrun.vim
-let b:quickrun_config = {'outputter/buffer/split' : "botright 8sp"}
+let g:quickrun_config = {
+  \'outputter/buffer/split' : "botright 8sp",
+  \'haskell' : { 'type' : 'haskell/stack' },
+  \'haskell/stack' : {
+  \    'command' : 'stack',
+  \    'exec' : '%c %o %s %a',
+  \    'cmdopt' : 'runghc',
+  \'outputter/buffer/split' : "botright 8sp",
+  \},
+\}
+let g:quickrun_config['vim'] = { 
+\   "hook/output_encode/enable" : 1,
+\   "hook/output_encode/encoding" : "utf-8",
+\}
 nnoremap <silent> \ :QuickRun<CR>
 " <C-c> で実行を強制終了させる
 " quickrun.vim が実行していない場合には <C-c> を呼び出す
 nnoremap <expr><silent> <C-c> quickrun#is_running() ? quickrun#sweep_sessions() : "\<C-c>"
 
-""""""" fast-tags
-au BufWritePost *.hs            silent !init-tags %
-au BufWritePost *.hsc           silent !init-tags %
