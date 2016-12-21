@@ -155,7 +155,8 @@ let g:quickrun_config = {
   \    'command' : 'stack',
   \    'exec' : '%c %o %s %a',
   \    'cmdopt' : 'runghc',
-  \'outputter/buffer/split' : "botright 8sp",
+  \    'outputter/buffer/split' : "botright 8sp",
+  \    "hook/output_encode/encoding" : "cp832",
   \},
 \}
 let g:quickrun_config['vim'] = { 
